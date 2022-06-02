@@ -17,7 +17,7 @@ const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.doc
 
 let Chatacter_data, Image_data;
 
-app.get("/:type/:option", (req, res) => {
+function fill(req, res) {
     const imageOpts = {
         centered: false,
         getImage: function (tagValue, tagName) {
@@ -93,23 +93,23 @@ app.get("/:type/:option", (req, res) => {
         case "WS":
             Chatacter_data = {
                 type: "WT - WS",
-                CODE: '- Đại bàng chúa – đại bàng mục tiêu.\n'+
-                '- Lãnh đạo tốt – Thích lãnh đạo người khác.\n'+
-                '- Cái tôi cao,không dễ dàng bị ảnh hưởng.\n'+
-                '- Đề cao quan điểm cá nhân.\n'+
-                '- Lập định rõ ràng và có mục tiêu để hành động.',
+                CODE: '- Đại bàng chúa – đại bàng mục tiêu.\n' +
+                    '- Lãnh đạo tốt – Thích lãnh đạo người khác.\n' +
+                    '- Cái tôi cao,không dễ dàng bị ảnh hưởng.\n' +
+                    '- Đề cao quan điểm cá nhân.\n' +
+                    '- Lập định rõ ràng và có mục tiêu để hành động.',
             };
             Image_data = { image: path.resolve(__dirname, "../Template/WP_WL.jpg") };
             break;
         case "WE":
             Chatacter_data = {
                 type: "WE",
-                CODE: '- Quyết định dựa trên cảm xúc.\n'+
-                '- Có khả năng truyền cảm hứng cho cả đội.\n'+
-                '- Cái tôi cao và đề cao quan điểm cá nhân (khả năng lãnh đạo).\n'+
-                '- Là người có tầm nhìn xa.\n'+
-                '- BẠN là mẫu người sống trong thế giới của cảm xúc, cực kì sâu sắc và thích quan tâm đến mọi người.\n'+
-                '- Có nhận thức nhạy bén về cảm xúc nội tâm cũng như cảm xúc của người khác.',
+                CODE: '- Quyết định dựa trên cảm xúc.\n' +
+                    '- Có khả năng truyền cảm hứng cho cả đội.\n' +
+                    '- Cái tôi cao và đề cao quan điểm cá nhân (khả năng lãnh đạo).\n' +
+                    '- Là người có tầm nhìn xa.\n' +
+                    '- BẠN là mẫu người sống trong thế giới của cảm xúc, cực kì sâu sắc và thích quan tâm đến mọi người.\n' +
+                    '- Có nhận thức nhạy bén về cảm xúc nội tâm cũng như cảm xúc của người khác.',
             };
             Image_data = { image: path.resolve(__dirname, "../Template/WP_WL.jpg") };
             break;
@@ -155,6 +155,10 @@ app.get("/:type/:option", (req, res) => {
         if (err) console.log(err);;
     });
     console.log("sent");
+}
+
+app.get("/:type/:option", (req, res) => {
+    res.send("hehe");
 });
 
 app.listen(8080, () => {
