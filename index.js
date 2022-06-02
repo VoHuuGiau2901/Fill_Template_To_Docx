@@ -1,5 +1,6 @@
 const express = require('express');
-const app = express();
+
+const cors = require('cors');
 
 const path = require("path");
 const Docxtemplater = require("docxtemplater");
@@ -16,6 +17,11 @@ const docx_output = path.resolve(__dirname + "/Output/" + "/output.docx");
 const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
 
 let Chatacter_data, Image_data;
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
 
 function fill(req, res) {
     const imageOpts = {
@@ -157,11 +163,13 @@ function fill(req, res) {
     console.log("sent");
 }
 
-app.get("/:type/:option", (req, res) => {
+app.get("/", (req, res) => {
     res.send("hehe");
 });
 
-app.listen(8080, () => {
-    console.log("Server is running on port 8080");
+const port = process.env.PORT || '5000';
+
+app.listen(port,() => {
+    console.log(`Server is running ${port}`);
 });
 
