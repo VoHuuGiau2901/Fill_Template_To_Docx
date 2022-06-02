@@ -190,8 +190,7 @@ function fill(req, res) {
     // console.log("sent");
 }
 
-app.get("/", (req, res) => {
-    req.params.type = "ARCH";
+app.get("/:type", (req, res) => {
     req.params.option = "DOCX";
     fill(req, res);
     // res.send("hehe");
