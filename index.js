@@ -12,35 +12,31 @@ const PizZip = require("pizzip");
 const libre = require('libreoffice-convert');
 const sizeOf = require("image-size");
 
-const docx_output = path.resolve(__dirname + "/Output/" + "/output.docx");
-
-// Load the docx file as content
-const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
-
 let Chatacter_data, Image_data;
 
 const app = express();
 
-app.use(express.json());
 app.use(cors());
 
 function fill(req, res) {
+    // Load the docx file as content
+    const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
 
     const imageOpts = {
         centered: false,
         getImage: function (tagValue, tagName) {
-            // return fs.readFileSync(tagValue);
+            return fs.readFileSync(tagValue);
         },
         getSize: function (img, tagValue, tagName, options) {
-            console.log(options);
-            const part = options.part;
-            if (part.module === "open-xml-templating/docxtemplater-replace-image-module") {
-                console.log("replace");
-                return [
-                    part.width,
-                    part.height
-                ]
-            }
+            // console.log(options);
+            // const part = options.part;
+            // if (part.module === "open-xml-templating/docxtemplater-replace-image-module") {
+            //     console.log("replace");
+            //     return [
+            //         part.width,
+            //         part.height
+            //     ]
+            // }
 
             const buffer = Buffer.from(img, "binary");
             const sizeObj = sizeOf(buffer);
@@ -156,6 +152,8 @@ function fill(req, res) {
 
     doc.render();
 
+    const docx_output = path.resolve(__dirname + "/Output/" + "/output.docx");
+
     const buf = doc.getZip().generate({
         type: "nodebuffer",
         compression: "DEFLATE",
@@ -186,10 +184,10 @@ function fill(req, res) {
     }
 
     // delete file on server after sent
-    fs.unlink(docx_output, function (err) {
-        if (err) console.log(err);;
-    });
-    console.log("sent");
+    // fs.unlink(docx_output, function (err) {
+    //     if (err) console.log(err);;
+    // });
+    // console.log("sent");
 }
 
 app.get("/", (req, res) => {
