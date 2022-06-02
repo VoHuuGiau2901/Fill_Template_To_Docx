@@ -10,6 +10,7 @@ const fs = require("fs");
 
 const PizZip = require("pizzip");
 const libre = require('libreoffice-convert');
+const sizeOf = require("image-size");
 
 const docx_output = path.resolve(__dirname + "/Output/" + "/output.docx");
 
@@ -24,13 +25,26 @@ app.use(express.json());
 app.use(cors());
 
 function fill(req, res) {
+
     const imageOpts = {
         centered: false,
         getImage: function (tagValue, tagName) {
-            return fs.readFileSync(tagValue);
+            // return fs.readFileSync(tagValue);
         },
-        getSize: function (img, tagValue, tagName) {
-            return [150, 150];
+        getSize: function (img, tagValue, tagName, options) {
+            console.log(options);
+            const part = options.part;
+            if (part.module === "open-xml-templating/docxtemplater-replace-image-module") {
+                console.log("replace");
+                return [
+                    part.width,
+                    part.height
+                ]
+            }
+
+            const buffer = Buffer.from(img, "binary");
+            const sizeObj = sizeOf(buffer);
+            return [sizeObj.width, sizeObj.height];
         },
     };
 
@@ -53,7 +67,7 @@ function fill(req, res) {
                     '- Bộc lộ bản chất theo tâm trạng.\n' +
                     '- Mẫu người cộng đồng xã hội,thích tham gia các hoạt động cộng đồng, từ thiện.',
             };
-            Image_data = { image: path.resolve(__dirname, "../Template/UL.jpg") };
+            Image_data = { image: path.resolve(__dirname + "/Template/UL.jpg") };
             break;
         case "RL":
             Chatacter_data = {
@@ -66,7 +80,7 @@ function fill(req, res) {
                     '- Thích suy luận, hay phán đoán, hỏi, đánh giá, lập luận trái ngược.\n' +
                     '- Khả năng kiểm soát công việc vào phút chót.',
             };
-            Image_data = { image: path.resolve(__dirname, "../Template/RL.jpg") };
+            Image_data = { image: path.resolve(__dirname + "/Template/RL.jpg") };
             break;
         case "WC":
         case "WD":
@@ -80,7 +94,7 @@ function fill(req, res) {
                     '- Là người hướng ngoại, Thích chia sẻ.\n' +
                     '- Nhu cầu đòi hỏi sự tôn trọng và khen ngợi cao.',
             };
-            Image_data = { image: path.resolve(__dirname, "../Template/WC_WD_WI.jpg") };
+            Image_data = { image: path.resolve(__dirname + "/Template/WC_WD_WI.jpg") };
             break;
         case "WP":
         case "WL":
@@ -93,7 +107,7 @@ function fill(req, res) {
                     '- Nhanh nhẹn, phản ứng nhanh.\n' +
                     '- Làm việc theo cách khác biệt.',
             };
-            Image_data = { image: path.resolve(__dirname, "../Template/WP_WL.jpg") };
+            Image_data = { image: path.resolve(__dirname + "/Template/WP_WL.jpg") };
             break;
         case "WT":
         case "WS":
@@ -105,7 +119,7 @@ function fill(req, res) {
                     '- Đề cao quan điểm cá nhân.\n' +
                     '- Lập định rõ ràng và có mục tiêu để hành động.',
             };
-            Image_data = { image: path.resolve(__dirname, "../Template/WP_WL.jpg") };
+            Image_data = { image: path.resolve(__dirname + "/Template/WP_WL.jpg") };
             break;
         case "WE":
             Chatacter_data = {
@@ -117,7 +131,22 @@ function fill(req, res) {
                     '- BẠN là mẫu người sống trong thế giới của cảm xúc, cực kì sâu sắc và thích quan tâm đến mọi người.\n' +
                     '- Có nhận thức nhạy bén về cảm xúc nội tâm cũng như cảm xúc của người khác.',
             };
-            Image_data = { image: path.resolve(__dirname, "../Template/WP_WL.jpg") };
+            Image_data = { image: path.resolve(__dirname + "/Template/WE.jpg") };
+            break;
+        case "ARCH":
+            Chatacter_data = {
+                type: "ARCH",
+                CODE: '- Mẫu người theo phong thái từng bước, làm việc trình tự (nếu chưa quen thì  bạn chưa phản xạ nhạy bén).\n' +
+                    '- Đòi hỏi thông tin chi tiết, cụ thể, rõ ràng, xác thực.n\n' +
+                    '- Hướng dẫn quy trình tốt.\n' +
+                    '- An toàn là trên hết.\n' +
+                    '- Dè dặt khi chưa cảm giác an toàn, sẽ bùng nổ khi đã an tâm hoặc đã tạo được sự tin tưởng.\n' +
+                    '- Chân thành trong các mối quan hệ xã hội.\n' +
+                    '- Hấp thu kiến thức vô hạn như một miếng bọt biển thấm nước.' +
+                    '- Duy trì sự hoạt động liên tục của hệ thống.\n' +
+                    '- Ham học hỏi, là chuyên gia xuất sắc.',
+            };
+            Image_data = { image: path.resolve(__dirname + "/Template/ARCH.jpg") };
             break;
     }
 
@@ -164,12 +193,15 @@ function fill(req, res) {
 }
 
 app.get("/", (req, res) => {
-    res.send("hehe");
+    req.params.type = "ARCH";
+    req.params.option = "DOCX";
+    fill(req, res);
+    // res.send("hehe");
 });
 
 const port = process.env.PORT || '5000';
 
-app.listen(port,() => {
+app.listen(port, () => {
     console.log(`Server is running ${port}`);
 });
 
