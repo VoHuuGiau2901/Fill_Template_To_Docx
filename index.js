@@ -18,9 +18,10 @@ const app = express();
 
 app.use(cors());
 
+// Load the docx file as content
+const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
+
 function fill(req, res) {
-    // Load the docx file as content
-    const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
 
     const imageOpts = {
         centered: false,
@@ -152,7 +153,7 @@ function fill(req, res) {
 
     doc.render();
 
-    const docx_output = path.resolve(__dirname + "/Output/" + "/output.docx");
+    const docx_output = path.resolve(__dirname + "/Output/" + req.params.type + ".docx");
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
