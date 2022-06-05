@@ -140,8 +140,6 @@ function fill(req, res) {
 
     const docx_output = __dirname + "/Output/" + Chatacter_data.type + ".docx";
 
-    console.log(docx_output);
-
     const close_path = fs.openSync(docx_output, 'w');
 
     const buf = doc.getZip().generate({
@@ -155,9 +153,11 @@ function fill(req, res) {
 
     fs.closeSync(close_path);
 
-    res.download(docx_output);
-
-    console.log("sent");
+    res.download(docx_output, (err) => {
+        if (err) res.send(err);
+        // delete file on server
+        fs.unlinkSync(docx_output);
+    });
 }
 
 app.get("/:type", (req, res) => {
