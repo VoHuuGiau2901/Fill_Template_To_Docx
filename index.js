@@ -11,16 +11,16 @@ const fs = require("fs");
 const PizZip = require("pizzip");
 const sizeOf = require("image-size");
 
-let Chatacter_data, Image_data;
 
 const app = express();
 
 app.use(cors());
 
-// Load the docx file as content
-const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
-
 function fill(req, res) {
+    
+    let Chatacter_data, Image_data;
+    // Load the docx file as content
+    const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
 
     const imageOpts = {
         centered: false,
@@ -41,6 +41,8 @@ function fill(req, res) {
         linebreaks: true,
         modules: [new ImageModule(imageOpts)],
     });
+
+    // console.log(req.params.type);
 
     switch (req.params.type) {
         case "UL":
@@ -68,11 +70,9 @@ function fill(req, res) {
             };
             Image_data = { image: path.resolve(__dirname + "/Template/RL.jpg") };
             break;
-        case "WC":
-        case "WD":
-        case "WI":
+        case "WCWDWI":
             Chatacter_data = {
-                type: "WC – WD - WI",
+                type: "WC-WD-WI",
                 CODE: '- Có tính linh hoạt, dễ thích nghi và thích ứng cao\n' +
                     '- Là người đa mục tiêu, đa kế hoạch, nhìn nhận vấn đề đa chiều, làm nhiều việc cùng lúc.\n' +
                     '- Hứng thú với thử thách, khám phá những điều mới lạ.\n' +
@@ -82,10 +82,9 @@ function fill(req, res) {
             };
             Image_data = { image: path.resolve(__dirname + "/Template/WC_WD_WI.jpg") };
             break;
-        case "WP":
-        case "WL":
+        case "WPWL":
             Chatacter_data = {
-                type: "WP - WL",
+                type: "WP-WL",
                 CODE: '- Thông thái, biểu tượng của cái đẹp, có sức lôi cuốn tự nhiên.\n' +
                     '- Chú ý phong cách, biểu hiện, vẻ ngoài.\n' +
                     '- Chủ nghĩa hoàn hảo.\n' +
@@ -95,10 +94,9 @@ function fill(req, res) {
             };
             Image_data = { image: path.resolve(__dirname + "/Template/WP_WL.jpg") };
             break;
-        case "WT":
-        case "WS":
+        case "WTWS":
             Chatacter_data = {
-                type: "WT - WS",
+                type: "WT-WS",
                 CODE: '- Đại bàng chúa – đại bàng mục tiêu.\n' +
                     '- Lãnh đạo tốt – Thích lãnh đạo người khác.\n' +
                     '- Cái tôi cao,không dễ dàng bị ảnh hưởng.\n' +
@@ -138,6 +136,8 @@ function fill(req, res) {
 
     let final_data = { ...Chatacter_data, ...Image_data };
 
+    // console.log(final_data);
+
     doc.setData(final_data);
 
     doc.render();
@@ -161,11 +161,7 @@ function fill(req, res) {
 }
 
 app.get("/:type", (req, res) => {
-    try{
-        fill(req,res);
-    }catch(err){
-        res.send(err);
-    }
+        fill(req, res);
 });
 
 const port = process.env.PORT || '5000';
