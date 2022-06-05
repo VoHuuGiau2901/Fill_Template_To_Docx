@@ -29,16 +29,6 @@ function fill(req, res) {
             return fs.readFileSync(tagValue);
         },
         getSize: function (img, tagValue, tagName, options) {
-            // console.log(options);
-            // const part = options.part;
-            // if (part.module === "open-xml-templating/docxtemplater-replace-image-module") {
-            //     console.log("replace");
-            //     return [
-            //         part.width,
-            //         part.height
-            //     ]
-            // }
-
             const buffer = Buffer.from(img, "binary");
             const sizeObj = sizeOf(buffer);
             return [sizeObj.width, sizeObj.height];
@@ -176,25 +166,13 @@ function fill(req, res) {
             let pdf_output = __dirname + "/Output/" + "/output.pdf";
             fs.writeFileSync(pdf_output, done);
             res.download(pdf_output);
-
-            // delete file on server after sent
-            fs.unlink(pdf_output, function (err) {
-                if (err) console.log(err);;
-            });
         });
     }
-
-    // delete file on server after sent
-    // fs.unlink(docx_output, function (err) {
-    //     if (err) console.log(err);;
-    // });
-    // console.log("sent");
 }
 
 app.get("/:type", (req, res) => {
     req.params.option = "DOCX";
     fill(req, res);
-    // res.send("hehe");
 });
 
 const port = process.env.PORT || '5000';
