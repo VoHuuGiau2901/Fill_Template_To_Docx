@@ -191,7 +191,7 @@ function fill(req, res) {
     // console.log("sent");
 }
 
-app.get("/:type:/:option", (req, res) => {
+app.get("/:type/:option", (req, res) => {
     // req.params.option = "DOCX";
     fill(req, res);
     // res.send("hehe");
