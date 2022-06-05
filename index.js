@@ -9,7 +9,6 @@ const ImageModule = require('docxtemplater-image-module-free');
 const fs = require("fs");
 
 const PizZip = require("pizzip");
-const libre = require('libreoffice-convert');
 const sizeOf = require("image-size");
 
 let Chatacter_data, Image_data;
@@ -29,6 +28,16 @@ function fill(req, res) {
             return fs.readFileSync(tagValue);
         },
         getSize: function (img, tagValue, tagName, options) {
+            // console.log(options);
+            // const part = options.part;
+            // if (part.module === "open-xml-templating/docxtemplater-replace-image-module") {
+            //     console.log("replace");
+            //     return [
+            //         part.width,
+            //         part.height
+            //     ]
+            // }
+
             const buffer = Buffer.from(img, "binary");
             const sizeObj = sizeOf(buffer);
             return [sizeObj.width, sizeObj.height];
@@ -152,26 +161,16 @@ function fill(req, res) {
 
     // Export
     fs.writeFileSync(docx_output, buf);
-
     // send file to client to download
-    if (req.params.option === 'DOCX') {
-        res.download(docx_output);
-    } else {
-        const file = fs.readFileSync(docx_output);
+    res.download(docx_output);
 
-        libre.convert(file, '.pdf', undefined, (err, done) => {
-            if (err) {
-                console.log(`Error converting file: ${err}`);
-            }
-            let pdf_output = __dirname + "/Output/" + "/output.pdf";
-            fs.writeFileSync(pdf_output, done);
-            res.download(pdf_output);
-        });
-    }
+    fs.unlink(docx_output, function (err) {
+        if (err) console.log(err);;
+    });
+    console.log("sent");
 }
 
 app.get("/:type", (req, res) => {
-    req.params.option = "DOCX";
     fill(req, res);
 });
 
