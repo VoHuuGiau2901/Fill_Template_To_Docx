@@ -155,13 +155,17 @@ function fill(req, res) {
     res.download(docx_output);
 
     fs.unlink(docx_output, function (err) {
-        if (err) console.log(err);;
+        if (err) res.send(err);
     });
     console.log("sent");
 }
 
 app.get("/:type", (req, res) => {
-    fill(req, res);
+    try{
+        fill(req,res);
+    }catch(err){
+        res.send(err);
+    }
 });
 
 const port = process.env.PORT || '5000';
