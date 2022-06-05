@@ -154,9 +154,9 @@ function fill(req, res) {
     // send file to client to download
     res.download(docx_output);
 
-    // fs.unlink(docx_output, function (err) {
-    //     if (err) res.send(err);
-    // });
+    fs.unlink(docx_output, function (err) {
+        if (err) res.send(err);
+    });
     console.log("sent");
 }
 
