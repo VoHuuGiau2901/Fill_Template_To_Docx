@@ -16,12 +16,12 @@ const app = express();
 
 app.use(cors());
 
-function fill(req, res) {
-    
-    let Chatacter_data, Image_data;
-    // Load the docx file as content
-    const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
+let Chatacter_data, Image_data;
 
+// Load the docx file as content
+const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
+
+function fill(req, res) {
     const imageOpts = {
         centered: false,
         getImage: function (tagValue, tagName) {
@@ -41,8 +41,6 @@ function fill(req, res) {
         linebreaks: true,
         modules: [new ImageModule(imageOpts)],
     });
-
-    // console.log(req.params.type);
 
     switch (req.params.type) {
         case "UL":
@@ -136,13 +134,15 @@ function fill(req, res) {
 
     let final_data = { ...Chatacter_data, ...Image_data };
 
-    // console.log(final_data);
-
     doc.setData(final_data);
 
     doc.render();
 
-    const docx_output = path.resolve(__dirname + "/Output/" + Chatacter_data.type + ".docx");
+    const docx_output = __dirname + "/Output/" + Chatacter_data.type + ".docx";
+
+    console.log(docx_output);
+
+    const close_path = fs.openSync(docx_output, 'w');
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
@@ -152,16 +152,16 @@ function fill(req, res) {
     // Export
     fs.writeFileSync(docx_output, buf);
     // send file to client to download
+
+    fs.closeSync(close_path);
+
     res.download(docx_output);
 
-    fs.unlink(docx_output, function (err) {
-        if (err) res.send(err);
-    });
     console.log("sent");
 }
 
 app.get("/:type", (req, res) => {
-        fill(req, res);
+    fill(req, res);
 });
 
 const port = process.env.PORT || '5000';
