@@ -175,7 +175,9 @@ app.get("/:type", (req, res) => {
     fill(req, res);
 });
 
-app.listen(5000, () => {
-    console.log('runnung');
+const port = process.env.PORT || '5000';
+
+app.listen(port, () => {
+    console.log(`Server is running ${port}`);
 });
 
