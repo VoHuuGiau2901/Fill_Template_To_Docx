@@ -28,16 +28,6 @@ function fill(req, res) {
             return fs.readFileSync(tagValue);
         },
         getSize: function (img, tagValue, tagName, options) {
-            // console.log(options);
-            // const part = options.part;
-            // if (part.module === "open-xml-templating/docxtemplater-replace-image-module") {
-            //     console.log("replace");
-            //     return [
-            //         part.width,
-            //         part.height
-            //     ]
-            // }
-
             const buffer = Buffer.from(img, "binary");
             const sizeObj = sizeOf(buffer);
             return [sizeObj.width, sizeObj.height];
