@@ -138,7 +138,7 @@ function fill(req, res) {
 
     doc.render();
 
-    const docx_output = "./Output/" + Chatacter_data.type + ".docx";
+    const docx_output = "./Output/" + req.params.type + ".docx";
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
