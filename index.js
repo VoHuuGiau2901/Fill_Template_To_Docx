@@ -18,6 +18,12 @@ app.use(cors());
 
 let Chatacter_data, Image_data;
 
+try{
+    fs.mkdirSync('./Output');
+}catch(err){
+    console.log("Output folder exists");
+}
+
 // Load the docx file as content
 const content = fs.readFileSync("./Template/Template.docx");
 
