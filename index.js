@@ -117,7 +117,7 @@ function fill(req, res) {
             break;
         case "ARCH":
             Chatacter_data = {
-                type: "ARCH",
+                type: "ARCH - Núi",
                 CODE: '- Mẫu người theo phong thái từng bước, làm việc trình tự (nếu chưa quen thì  bạn chưa phản xạ nhạy bén).\n' +
                     '- Đòi hỏi thông tin chi tiết, cụ thể, rõ ràng, xác thực.n\n' +
                     '- Hướng dẫn quy trình tốt.\n' +
@@ -140,9 +140,9 @@ function fill(req, res) {
 
     const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
-    // console.log(docx_output);
-
-    fs.closeSync(fs.openSync(docx_output, 'w'));
+    fs.appendFile(docx_output, '', (err) => {
+        if (err) res.send(err);
+    });
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
