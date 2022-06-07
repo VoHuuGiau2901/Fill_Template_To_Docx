@@ -156,9 +156,7 @@ function fill(req, res) {
     res.download(docx_output, (err) => {
         if (err) console.log(err);
         // delete file on Server
-        fs.unlink(docx_output, (err) => {
-            if (err) console.log(err);
-        });
+        fs.unlinkSync(docx_output)
         res.end();
         console.log("sent");
     });
