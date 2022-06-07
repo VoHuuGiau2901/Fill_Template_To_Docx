@@ -140,31 +140,29 @@ function fill(req, res) {
 
     const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
-    fs.appendFile(docx_output, '', (err) => {
-        if (err) res.send(err + "line :144");
-        const buf = doc.getZip().generate({
-            type: "nodebuffer",
-            compression: "DEFLATE",
-        });
+    const buf = doc.getZip().generate({
+        type: "nodebuffer",
+        compression: "DEFLATE",
+    });
 
-        // Export
-        fs.writeFileSync(docx_output, buf);
-
+    // Export
+    fs.writeFile(docx_output, buf, (err) => {
+        if (err) res.send(err);
         // send file to client to download
         res.download(docx_output, (err) => {
             if (err) res.send(err);
             // delete file on Server
-            fs.unlinkSync(docx_output, (err) => {
+            fs.unlink(docx_output, (err) => {
                 if (err) res.send(err);
             });
             res.end();
+            console.log("sent");
         });
-    })
+    });
 }
 
 app.get("/:type", (req, res) => {
     fill(req, res);
-    console.log("sent");
 });
 
 const port = process.env.PORT || '5000';
