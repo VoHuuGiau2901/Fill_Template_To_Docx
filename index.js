@@ -140,8 +140,6 @@ function fill(req, res) {
 
     const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
-    console.log(Chatacter_data);
-
     fs.appendFile(docx_output, '', (err) => {
         if (err) res.send(err + "line :144");
         const buf = doc.getZip().generate({
@@ -159,13 +157,14 @@ function fill(req, res) {
             fs.unlinkSync(docx_output, (err) => {
                 if (err) res.send(err);
             });
+            res.end();
         });
     })
 }
 
 app.get("/:type", (req, res) => {
     fill(req, res);
-    res.end();
+    console.log("sent");
 });
 
 const port = process.env.PORT || '5000';
