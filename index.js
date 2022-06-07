@@ -142,18 +142,20 @@ function fill(req, res) {
 
     const close_path = fs.openSync(docx_output, 'w');
 
+    fs.closeSync(close_path);
+
     const buf = doc.getZip().generate({
         type: "nodebuffer",
         compression: "DEFLATE",
     });
 
     // Export
-    fs.writeFileSync(docx_output, buf);
-    // send file to client to download
-
-    fs.closeSync(close_path);
+    fs.writeFileSync(docx_output, buf,(err)=>{
+        res.send(err);
+    });
 
     res.download(docx_output, (err) => {
+        // send file to client to download
         if (err) res.send(err);
         // delete file on server
         fs.unlinkSync(docx_output);
