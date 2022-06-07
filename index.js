@@ -140,24 +140,25 @@ function fill(req, res) {
 
     const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
-    fs.appendFileSync(docx_output, '')
-
-    const buf = doc.getZip().generate({
-        type: "nodebuffer",
-        compression: "DEFLATE",
-    });
-
-    // Export
-    fs.writeFileSync(docx_output, buf);
-
-    // send file to client to download
-    res.download(docx_output, (err) => {
+    fs.appendFile(docx_output, '', (err) => {
         if (err) res.send(err);
-        // delete file on Server
-        fs.unlinkSync(docx_output, (err) => {
-            if (err) res.send(err);
+        const buf = doc.getZip().generate({
+            type: "nodebuffer",
+            compression: "DEFLATE",
         });
-    });
+
+        // Export
+        fs.writeFileSync(docx_output, buf);
+
+        // send file to client to download
+        res.download(docx_output, (err) => {
+            if (err) res.send(err);
+            // delete file on Server
+            fs.unlinkSync(docx_output, (err) => {
+                if (err) res.send(err);
+            });
+        });
+    })
 }
 
 app.get("/:type", (req, res) => {
