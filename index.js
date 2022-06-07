@@ -146,13 +146,18 @@ function fill(req, res) {
     });
 
     // Export
-    fs.writeFileSync(docx_output, buf);
+    try {
+        fs.writeFileSync(docx_output, buf);
+    } catch (err) {
+        console.log(err);
+    }
+    
     // send to client
     res.download(docx_output, (err) => {
-        if (err) res.send(err);
+        if (err) console.log(err);
         // delete file on Server
         fs.unlink(docx_output, (err) => {
-            if (err) res.send(err);
+            if (err) console.log(err);
         });
         res.end();
         console.log("sent");
