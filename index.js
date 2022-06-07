@@ -19,7 +19,7 @@ app.use(cors());
 let Chatacter_data, Image_data;
 
 // Load the docx file as content
-const content = fs.readFileSync(path.resolve(__dirname + "/Template/Template.docx"));
+const content = fs.readFileSync("./Template/Template.docx");
 
 function fill(req, res) {
     const imageOpts = {
@@ -53,7 +53,7 @@ function fill(req, res) {
                     '- Bộc lộ bản chất theo tâm trạng.\n' +
                     '- Mẫu người cộng đồng xã hội,thích tham gia các hoạt động cộng đồng, từ thiện.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/UL.jpg") };
+            Image_data = { image: "./Template/UL.jpg" };
             break;
         case "RL":
             Chatacter_data = {
@@ -66,7 +66,7 @@ function fill(req, res) {
                     '- Thích suy luận, hay phán đoán, hỏi, đánh giá, lập luận trái ngược.\n' +
                     '- Khả năng kiểm soát công việc vào phút chót.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/RL.jpg") };
+            Image_data = { image: "./Template/RL.jpg" };
             break;
         case "WCWDWI":
             Chatacter_data = {
@@ -78,7 +78,7 @@ function fill(req, res) {
                     '- Là người hướng ngoại, Thích chia sẻ.\n' +
                     '- Nhu cầu đòi hỏi sự tôn trọng và khen ngợi cao.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/WC_WD_WI.jpg") };
+            Image_data = { image: "./Template/WC_WD_WI.jpg" };
             break;
         case "WPWL":
             Chatacter_data = {
@@ -90,7 +90,7 @@ function fill(req, res) {
                     '- Nhanh nhẹn, phản ứng nhanh.\n' +
                     '- Làm việc theo cách khác biệt.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/WP_WL.jpg") };
+            Image_data = { image: "./Template/WP_WL.jpg" };
             break;
         case "WTWS":
             Chatacter_data = {
@@ -101,7 +101,7 @@ function fill(req, res) {
                     '- Đề cao quan điểm cá nhân.\n' +
                     '- Lập định rõ ràng và có mục tiêu để hành động.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/WP_WL.jpg") };
+            Image_data = { image: "./Template/WP_WL.jpg" };
             break;
         case "WE":
             Chatacter_data = {
@@ -113,7 +113,7 @@ function fill(req, res) {
                     '- BẠN là mẫu người sống trong thế giới của cảm xúc, cực kì sâu sắc và thích quan tâm đến mọi người.\n' +
                     '- Có nhận thức nhạy bén về cảm xúc nội tâm cũng như cảm xúc của người khác.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/WE.jpg") };
+            Image_data = { image: "./Template/WE.jpg" };
             break;
         case "ARCH":
             Chatacter_data = {
@@ -128,7 +128,7 @@ function fill(req, res) {
                     '- Duy trì sự hoạt động liên tục của hệ thống.\n' +
                     '- Ham học hỏi, là chuyên gia xuất sắc.',
             };
-            Image_data = { image: path.resolve(__dirname + "/Template/ARCH.jpg") };
+            Image_data = { image: "./Template/ARCH.jpg" };
             break;
     }
 
@@ -138,11 +138,11 @@ function fill(req, res) {
 
     doc.render();
 
-    const docx_output = __dirname + "/Output/" + Chatacter_data.type + ".docx";
+    const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
-    const close_path = fs.openSync(docx_output, 'w');
+    // console.log(docx_output);
 
-    fs.closeSync(close_path);
+    fs.closeSync(fs.openSync(docx_output, 'w'));
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
@@ -150,13 +150,17 @@ function fill(req, res) {
     });
 
     // Export
-    fs.writeFileSync(docx_output, buf,(err)=>{
+    fs.writeFileSync(docx_output, buf, (err) => {
         res.send(err);
     });
 
     res.download(docx_output, (err) => {
         // send file to client to download
         if (err) res.send(err);
+
+        fs.unlinkSync(docx_output, (err) => {
+            if (err) res.send(err);
+        });
     });
 }
 
