@@ -140,9 +140,7 @@ function fill(req, res) {
 
     const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
-    fs.appendFile(docx_output, '', (err) => {
-        if (err) res.send(err);
-    });
+    fs.appendFileSync(docx_output, '')
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
@@ -150,12 +148,10 @@ function fill(req, res) {
     });
 
     // Export
-    fs.writeFileSync(docx_output, buf, (err) => {
-        res.send(err);
-    });
+    fs.writeFileSync(docx_output, buf);
 
+    // send file to client to download
     res.download(docx_output, (err) => {
-        // send file to client to download
         if (err) res.send(err);
         // delete file on Server
         fs.unlinkSync(docx_output, (err) => {
