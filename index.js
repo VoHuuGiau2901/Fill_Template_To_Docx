@@ -141,7 +141,7 @@ function fill(req, res) {
     const docx_output = "./Output/" + Chatacter_data.type + ".docx";
 
     fs.appendFile(docx_output, '', (err) => {
-        if (err) res.send(err);
+        if (err) res.send(err + "line :144");
         const buf = doc.getZip().generate({
             type: "nodebuffer",
             compression: "DEFLATE",
