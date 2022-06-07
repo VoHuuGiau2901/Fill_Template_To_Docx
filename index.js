@@ -146,17 +146,14 @@ function fill(req, res) {
     });
 
     // Export
-    try {
-        fs.writeFileSync(docx_output, buf);
-    } catch (err) {
-        console.log(err);
-    }
-    
+    fs.writeFileSync(docx_output, buf);
     // send to client
     res.download(docx_output, (err) => {
-        if (err) console.log(err);
+        if (err) console.log("Download Error: "+err);
         // delete file on Server
-        fs.unlinkSync(docx_output)
+        fs.unlink(docx_output, (err) => {
+            if (err)  console.log("Unlink Error: "+err);
+        });
         res.end();
         console.log("sent");
     });
