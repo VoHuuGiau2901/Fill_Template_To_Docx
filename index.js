@@ -146,18 +146,16 @@ function fill(req, res) {
     });
 
     // Export
-    fs.writeFile(docx_output, buf, (err) => {
+    fs.writeFileSync(docx_output, buf);
+    // send to client
+    res.download(docx_output, (err) => {
         if (err) res.send(err);
-        // send file to client to download
-        res.download(docx_output, (err) => {
+        // delete file on Server
+        fs.unlink(docx_output, (err) => {
             if (err) res.send(err);
-            // delete file on Server
-            fs.unlink(docx_output, (err) => {
-                if (err) res.send(err);
-            });
-            res.end();
-            console.log("sent");
         });
+        res.end();
+        console.log("sent");
     });
 }
 
