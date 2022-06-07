@@ -157,8 +157,6 @@ function fill(req, res) {
     res.download(docx_output, (err) => {
         // send file to client to download
         if (err) res.send(err);
-        // delete file on server
-        fs.unlinkSync(docx_output);
     });
 }
 
