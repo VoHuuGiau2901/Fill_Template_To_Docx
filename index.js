@@ -138,7 +138,7 @@ function fill(req, res) {
 
     doc.render();
 
-    const docx_output = "./Output/" + req.params.type + ".docx";
+    const docx_output = path.resolve(__dirname, req.params.type + ".docx");
 
     const buf = doc.getZip().generate({
         type: "nodebuffer",
@@ -149,10 +149,10 @@ function fill(req, res) {
     fs.writeFileSync(docx_output, buf);
     // send to client
     res.download(docx_output, (err) => {
-        if (err) console.log("Download Error: "+err);
+        if (err) console.log("Download Error: " + err);
         // delete file on Server
         fs.unlink(docx_output, (err) => {
-            if (err)  console.log("Unlink Error: "+err);
+            if (err) console.log("Unlink Error: " + err);
         });
         res.end();
         console.log("sent");
